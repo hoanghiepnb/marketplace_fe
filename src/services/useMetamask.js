@@ -9,9 +9,10 @@ const useMetamask = () => {
 
     useEffect(() => {
         if (window.ethereum) {
+            const provider = window.ethereum;
             const web3Instance = new Web3(window.ethereum);
             setWeb3(web3Instance);
-            window.ethereum.request({ method: "eth_requestAccounts" })
+            provider.request({ method: "eth_accounts" })
             .then(accounts => {
                 setAccount(accounts[0]);
                 setIsConnected(true);
@@ -20,7 +21,7 @@ const useMetamask = () => {
                 console.log(err);
             });
 
-            window.ethereum.on("accountsChanged", accounts => {
+            provider.on("accountsChanged", accounts => {
                 if (accounts.length > 0) {
                     setAccount(accounts[0]);
                     setIsConnected(true);
@@ -30,7 +31,7 @@ const useMetamask = () => {
                 }
             });
 
-            window.ethereum.on("chainChanged", chainId => {
+            provider.on("chainChanged", chainId => {
                 window.location.reload();
             });
         } else {
