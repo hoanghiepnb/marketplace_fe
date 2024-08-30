@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import useMetamask from "./useMetamask";
+import NftList from "./components/NftList";
 
 function App() {
+  const {web3, account, isConnected, connectMetamask} = useMetamask();
+  const [owner, setOwner] = useState('');
+
+    useEffect(() => {
+        if (isConnected && account) {
+            setOwner(account);
+        }
+    }, [isConnected, account]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+            <header className="App-header">
+                <h1>Marketplace</h1>
+                {isConnected ? (
+                    <div>
+                        <p>Connected account: {account}</p>
+                        {owner && <NftList owner={owner} />}
+                    </div>
+                ) : (
+                    <button onClick={connectMetamask}>Connect Metamask</button>
+                )
+                }
+            </header>
+      </div>
   );
 }
 
